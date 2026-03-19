@@ -20,6 +20,9 @@ Une API REST robuste pour la gestion d'un annuaire d'étudiants, développée av
 ### Pré-requis
 - Node.js version 18.x ou 20.x
 
+###  Tester avec Postman
+Le projet inclut un fichier `student-api-postman.json` à la racine. Vous pouvez l'importer directement dans Postman ou Insomnia pour tester instantanément chacune des 7 routes de l'API sans rien configurer.
+
 ### Script recommandés
 ```bash
 # Installer les dépendances

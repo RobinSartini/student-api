@@ -1,0 +1,133 @@
+{
+  "info": {
+    "name": "Student Directory API",
+    "description": "API REST pour gérer un annuaire d'étudiants (Projet EdTech)",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Students",
+      "item": [
+        {
+          "name": "1. Obtenir tous les étudiants (avec pagination et tri)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:3000/students?page=1&limit=5&sort=grade&order=desc",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["students"],
+              "query": [
+                { "key": "page", "value": "1" },
+                { "key": "limit", "value": "5" },
+                { "key": "sort", "value": "grade" },
+                { "key": "order", "value": "desc" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "2. Obtenir les statistiques globales",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:3000/students/stats",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["students", "stats"]
+            }
+          }
+        },
+        {
+          "name": "3. Rechercher un étudiant",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:3000/students/search?q=alice",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["students", "search"],
+              "query": [
+                { "key": "q", "value": "alice" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "4. Obtenir un étudiant par ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:3000/students/1",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["students", "1"]
+            }
+          }
+        },
+        {
+          "name": "5. Créer un étudiant",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"firstName\": \"Nouveau\",\n  \"lastName\": \"Eleve\",\n  \"email\": \"nouveau@edu.fr\",\n  \"grade\": 15,\n  \"field\": \"mathématiques\"\n}"
+            },
+            "url": {
+              "raw": "http://localhost:3000/students",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["students"]
+            }
+          }
+        },
+        {
+          "name": "6. Mettre à jour un étudiant",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"firstName\": \"Alice Modifié\",\n  \"lastName\": \"Martin\",\n  \"email\": \"alice.martin@edu.fr\",\n  \"grade\": 19.5,\n  \"field\": \"informatique\"\n}"
+            },
+            "url": {
+              "raw": "http://localhost:3000/students/1",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["students", "1"]
+            }
+          }
+        },
+        {
+          "name": "7. Supprimer un étudiant",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "http://localhost:3000/students/2",
+              "protocol": "http",
+              "host": ["localhost"],
+              "port": "3000",
+              "path": ["students", "2"]
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

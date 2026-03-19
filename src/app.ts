@@ -1,7 +1,10 @@
 import { Hono } from 'hono'
-import studentsRouter from './routes/students.js'
+import { logger } from 'hono/logger'
+import studentsRouter from './routes/students.routes.js'
 
 const app = new Hono()
+
+app.use('*', logger())
 
 app.route('/students', studentsRouter)
 
