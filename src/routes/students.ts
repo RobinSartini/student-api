@@ -74,7 +74,57 @@ router.get('/search', (c) => {
 
 // GET /students
 router.get('/', (c) => {
-  return c.json(students)
+  let results = [...students]
+
+  // Sorting support: ?sort=grade&order=desc
+  const sort = c.req.query('sort')
+  const order = c.req.query('order') || 'asc'
+  
+  if (sort) {
+    if (!['id', 'firstName', 'lastName', 'grade'].includes(sort)) {
+      return c.json({ error: 'Paramètre de tri invalide' }, 400)
+    }
+    results.sort((a, b) => {
+      const valA = a[sort as keyof Student]
+      const valB = b[sort as keyof Student]
+      
+      if (typeof valA === 'string' && typeof valB === 'string') {
+        return order.toLowerCase() === 'desc' 
+          ? valB.localeCompare(valA) 
+          : valA.localeCompare(valB)
+      }
+      
+      return order.toLowerCase() === 'desc' 
+         ? (valB as number) - (valA as number) 
+         : (valA as number) - (valB as number)
+    })
+  }
+
+  // Pagination support: ?page=1&limit=10
+  const pageStr = c.req.query('page')
+  const limitStr = c.req.query('limit')
+  
+  // If no pagination requested, just return the array directly to preserve original API signature expected by some older tests,
+  // or return { data, meta } if pagination is requested. Let's strictly return paginated data:
+  const page = parseInt(pageStr || '1', 10)
+  const limit = parseInt(limitStr || '10', 10)
+  
+  if (isNaN(page) || isNaN(limit) || page < 1 || limit < 1) {
+    return c.json({ error: 'Paramètres de pagination invalides' }, 400)
+  }
+
+  const start = (page - 1) * limit
+  const paginatedResults = results.slice(start, start + limit)
+
+  return c.json({
+    data: paginatedResults,
+    meta: {
+      total: results.length,
+      page,
+      limit,
+      totalPages: Math.ceil(results.length / limit)
+    }
+  })
 })
 
 // GET /students/:id

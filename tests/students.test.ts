@@ -9,17 +9,62 @@ beforeEach(() => {
 // ─── GET /students ───────────────────────────────────────────────────────────
 
 describe('GET /students', () => {
-  it('doit renvoyer 200 et un tableau', async () => {
+  it('doit renvoyer 200 et la structure paginée', async () => {
     const res = await app.request('/students')
     expect(res.status).toBe(200)
     const body = await res.json()
-    expect(Array.isArray(body)).toBe(true)
+    expect(Array.isArray(body.data)).toBe(true)
+    expect(body.meta).toBeDefined()
   })
 
-  it('doit renvoyer les 5 étudiants initiaux', async () => {
+  it('doit renvoyer les 5 étudiants initiaux par défaut', async () => {
     const res = await app.request('/students')
     const body = await res.json()
-    expect(body).toHaveLength(5)
+    expect(body.data).toHaveLength(5)
+    expect(body.meta.total).toBe(5)
+  })
+
+  it('doit gérer la pagination (limit=2)', async () => {
+    const res = await app.request('/students?limit=2')
+    const body = await res.json()
+    expect(res.status).toBe(200)
+    expect(body.data).toHaveLength(2)
+    expect(body.meta.page).toBe(1)
+    expect(body.meta.totalPages).toBe(3)
+  })
+
+  it('doit gérer la pagination (page=3)', async () => {
+    const res = await app.request('/students?page=3&limit=2')
+    const body = await res.json()
+    expect(res.status).toBe(200)
+    expect(body.data).toHaveLength(1)
+    expect(body.meta.page).toBe(3)
+  })
+
+  it('doit renvoyer 400 pour des paramètres de pagination invalides', async () => {
+    const res = await app.request('/students?page=-1')
+    expect(res.status).toBe(400)
+  })
+
+  it('doit trier les étudiants par note (desc)', async () => {
+    const res = await app.request('/students?sort=grade&order=desc')
+    const body = await res.json()
+    expect(res.status).toBe(200)
+    expect(body.data[0].firstName).toBe('Clara') // Grade 18
+    expect(body.data[1].firstName).toBe('Alice') // Grade 16.5
+  })
+
+  it('doit trier les étudiants par prénom (asc)', async () => {
+    const res = await app.request('/students?sort=firstName&order=asc')
+    const body = await res.json()
+    expect(res.status).toBe(200)
+    expect(body.data[0].firstName).toBe('Alice')
+    expect(body.data[1].firstName).toBe('Bob')
+  })
+
+  it('doit renvoyer 400 pour un paramètre de tri non autorisé', async () => {
+    const res = await app.request('/students?sort=unknownData')
+    expect(res.status).toBe(400)
   })
 })
 
