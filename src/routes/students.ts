@@ -74,7 +74,7 @@ router.get('/search', (c) => {
 
 // GET /students
 router.get('/', (c) => {
-  let results = [...students]
+  const results = [...students]
 
   // Sorting support: ?sort=grade&order=desc
   const sort = c.req.query('sort')
